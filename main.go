@@ -7,12 +7,12 @@ import (
 	"log"
 
 	"github.com/Shopify/sarama"
-	"github.com/joeshaw/envdecode"
+	env "github.com/Netflix/go-env"
 )
 
 type AppConfig struct {
 	Kafka struct {
-		URL           string `env:"KAFKA_URL,required"`
+		URL           string `env:"KAFKA_URL,required=true"`
 		// TrustedCert   string `env:"KAFKA_TRUSTED_CERT,required"`
 		// ClientCertKey string `env:"KAFKA_CLIENT_CERT_KEY,required"`
 		// ClientCert    string `env:"KAFKA_CLIENT_CERT,required"`
@@ -32,15 +32,19 @@ type Application struct {
 }
 
 func main() {
-	appconfig := AppConfig{}
-	envdecode.MustDecode(&appconfig)
+	var appconfig AppConfig
+	_, err := env.UnmarshalFromEnviron(&appconfig)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	brokers := []string{appconfig.Kafka.URL}
 	topic := appconfig.Kafka.Topic
 
 	producer := NewProducer(brokers)
 	defer producer.Close()
 
-	app := Application{
+	app := &Application{
 		Producer: producer,
 		Topic: topic,
 	}
@@ -50,7 +54,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func (app Application) SubmitHandler(w http.ResponseWriter, r *http.Request) {
+func (app *Application) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "POST only", http.StatusMethodNotAllowed)
 		return
