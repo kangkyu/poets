@@ -44,7 +44,7 @@ func main() {
 	producer := NewProducer(brokers)
 	defer producer.Close()
 
-	app := Application{
+	app := &Application{
 		Producer: producer,
 		Topic: topic,
 	}
@@ -54,7 +54,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func (app Application) SubmitHandler(w http.ResponseWriter, r *http.Request) {
+func (app *Application) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "POST only", http.StatusMethodNotAllowed)
 		return
