@@ -52,16 +52,16 @@ func main() {
 
 func (app Application) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-        http.Error(w, "POST only", http.StatusMethodNotAllowed)
+		http.Error(w, "POST only", http.StatusMethodNotAllowed)
 		return
 	}
 
 	var submit SubmitBody
 	err := json.NewDecoder(r.Body).Decode(&submit)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusBadRequest)
-        return
-    }
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	fmt.Printf("%s\n", submit.Message)
 
 	msg := submit.Message
