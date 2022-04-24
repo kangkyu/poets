@@ -69,6 +69,7 @@ func (app Application) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 		Topic: app.Topic,
 		Value: sarama.StringEncoder(msg),
 	}
+	w.WriteHeader(http.StatusCreated)
 }
 
 func NewProducer(brokers []string) sarama.AsyncProducer {
