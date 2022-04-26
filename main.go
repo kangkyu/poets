@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/Shopify/sarama"
 	env "github.com/Netflix/go-env"
@@ -40,6 +41,12 @@ func main() {
 
 	brokers := []string{appconfig.Kafka.URL}
 	topic := appconfig.Kafka.Topic
+
+	if len(os.Args) > 1 {
+		fmt.Println(os.Args, len(os.Args))
+		consume(brokers)
+		return
+	}
 
 	producer := NewProducer(brokers)
 	defer producer.Close()

@@ -12,3 +12,9 @@ Training with Sarama (Kafka Go library)
 ```sh
   make test
 ```
+
++ Consume (will run in foreground)
+```sh
+  go build
+  KAFKA_URL="..." ./poets consume
+```
