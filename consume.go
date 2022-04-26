@@ -36,7 +36,7 @@ func consume(brokers []string) {
     // Count how many message processed
     msgCount := 0
 
-    // Get signnal for finish
+    // Get signal for finish
     doneCh := make(chan struct{})
     go func() {
         for {
@@ -46,7 +46,7 @@ func consume(brokers []string) {
                 fmt.Println("Received messages", string(msg.Key), string(msg.Value))
             case consumerError := <-errors:
                 msgCount++
-                fmt.Println("Received consumerError ", string(consumerError.Topic), string(consumerError.Partition), consumerError.Err)
+                fmt.Println("Received consumerError ", consumerError.Topic, string(consumerError.Partition), consumerError.Err)
                 doneCh <- struct{}{}
             case <-signals:
                 fmt.Println("Interrupt is detected")
